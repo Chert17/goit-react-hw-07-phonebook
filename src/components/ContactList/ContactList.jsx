@@ -3,13 +3,12 @@ import { ContactList, ContactItem } from './ContactsList.styled';
 import { Btn } from 'components/ContactForm/ContactForm.styled';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { removeContact } from '../../redux/contacts/contacts';
+import { removeContact } from '../../redux/contactSlice';
 
 export function ContactsList() {
-  const contacts = useSelector(state => state.contacts);
+  const contacts = useSelector(state => state.contacts.contacts);
+  const filter = useSelector(state => state.filter.filter);
   const dispatch = useDispatch();
-
-  const filter = useSelector(state => state.filter);
 
   function filterContacts() {
     const normalizeFilter = filter.trim().toLowerCase();

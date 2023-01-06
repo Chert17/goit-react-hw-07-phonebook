@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { addContact } from '../../redux/contacts/contacts';
+import { addContact } from '../../redux/contactSlice';
 
 import { Form, FormItem, InputName, Btn } from './ContactForm.styled';
 
