@@ -1,8 +1,11 @@
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { addContact } from '../../redux/contacts/contacts';
 
 import { Form, FormItem, InputName, Btn } from './ContactForm.styled';
 
-export function ContactForm({ addContact }) {
+export function ContactForm() {
+  const dispatch = useDispatch();
   const { handleSubmit, register, reset } = useForm({
     defaultValues: {
       name: '',
@@ -12,8 +15,8 @@ export function ContactForm({ addContact }) {
 
   function onSubmit(data, e) {
     e.preventDefault();
-    addContact(data);
-    reset({ name: '', number: '' });
+    dispatch(addContact(data));
+    reset();
   }
 
   return (
