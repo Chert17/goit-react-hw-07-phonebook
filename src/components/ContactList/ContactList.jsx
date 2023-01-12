@@ -1,34 +1,29 @@
 import PropTypes from 'prop-types';
-import { ContactList, ContactItem } from './ContactsList.styled';
-import { Btn } from 'components/ContactForm/ContactForm.styled';
+import { ContactList } from './ContactsList.styled';
 
-import { useSelector, useDispatch } from 'react-redux';
-import { removeContact } from '../../redux/contactSlice';
+import { useGetContactsQuery } from '../../redux/contactSlice';
+import { useSelector } from 'react-redux';
+import { ContactItem } from 'components/Contactstem/ContactItem';
 
 export function ContactsList() {
-  const contacts = useSelector(state => state.contacts.contacts);
   const filter = useSelector(state => state.filter.filter);
-  const dispatch = useDispatch();
 
-  function filterContacts() {
-    const normalizeFilter = filter.trim().toLowerCase();
+  const { currentData, isError, isFetching } = useGetContactsQuery(filter);
 
-    return contacts.filter(({ name }) =>
-      name.toLowerCase().includes(normalizeFilter)
-    );
-  }
+  if (isError) return <div>An error has occurred!</div>;
+
+  if (isFetching && !currentData) return <h2>Loading...</h2>; //<Skeleton />
 
   return (
     <>
       <ContactList>
-        {filterContacts().map(({ id, name, number }) => (
-          <ContactItem key={id}>
-            {name}: {number}
-            <Btn type="button" onClick={() => dispatch(removeContact(id))}>
-              Delete
-            </Btn>
-          </ContactItem>
-        ))}
+        {!currentData ? (
+          <p>contacts list is empty</p>
+        ) : (
+          currentData.map(contact => (
+            <ContactItem key={contact.id} {...contact} />
+          ))
+        )}
       </ContactList>
     </>
   );
@@ -39,7 +34,7 @@ ContactsList.protoTypes = {
     PropTypes.exact({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
+      phone: PropTypes.string.isRequired,
     })
   ).isRequired,
   onDelete: PropTypes.func.isRequired,

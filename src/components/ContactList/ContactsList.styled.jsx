@@ -6,7 +6,7 @@ export const ContactList = styled.ul`
   gap: 8px;
 `;
 
-export const ContactItem = styled.li`
+export const ContactItemStyle = styled.li`
   display: flex;
   gap: 8px;
 `;

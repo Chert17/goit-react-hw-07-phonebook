@@ -1,21 +1,40 @@
+import { Spinner } from 'components/Spinner/Spinner';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
-import { addContact } from '../../redux/contactSlice';
-
+import { useAddContactMutation, useGetContactsQuery } from 'redux/contactSlice';
 import { Form, FormItem, InputName, Btn } from './ContactForm.styled';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const notifyStyle = {
+  position: 'top-center',
+  autoClose: 2000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: 'dark',
+};
 
 export function ContactForm() {
-  const dispatch = useDispatch();
   const { handleSubmit, register, reset } = useForm({
     defaultValues: {
       name: '',
-      number: '',
+      phone: '',
     },
   });
+  const [addContact, { isLoading }] = useAddContactMutation();
+  const { data: contacts } = useGetContactsQuery('');
 
-  function onSubmit(data, e) {
+  async function onSubmit(data, e) {
     e.preventDefault();
-    dispatch(addContact(data));
+    if (contacts.find(contact => contact.name === data.name)) {
+      const notify = () =>
+        toast(`${data.name} is alredy in contacts`, notifyStyle);
+      return notify();
+    }
+    addContact(data);
+
     reset();
   }
 
@@ -33,16 +52,19 @@ export function ContactForm() {
           />
         </FormItem>
         <FormItem>
-          <InputName>Number</InputName>
+          <InputName>Phone</InputName>
           <input
             type="tel"
-            {...register('number')}
+            {...register('phone')}
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+            title="Phone phone must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
           />
         </FormItem>
-        <Btn type="submit">Add contact</Btn>
+        <Btn disabled={isLoading} type="submit">
+          {isLoading && <Spinner />} Add contact
+        </Btn>
+        <ToastContainer />
       </Form>
     </>
   );

@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { Field } from './Filter.styled';
 import { FormItem } from 'components/ContactForm/ContactForm.styled';
-import { setFilter } from '../../redux/filterSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { setFilter } from '../../redux/filterSlice';
 
 export function Filter() {
   const filter = useSelector(state => state.filter.filter);

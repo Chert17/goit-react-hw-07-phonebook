@@ -23,6 +23,9 @@ export const InputName = styled.span`
 `;
 
 export const Btn = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid rgb(133, 133, 133);
   border-radius: 4px;
 
